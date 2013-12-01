@@ -9,28 +9,19 @@ from nose import with_setup
 from nose.tools import *
 
 def setup_function():
-    pass
- 
+    cloud.bucket.put('test1.txt')
+
 def teardown_function():
-    pass
+    cloud.bucket.remove('test1.txt')
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
-
-@raises(TypeError)
-def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
+@with_setup(setup_function, teardown_function)
+def test_iterlist():
+    '''Retrieve obj_paths of all user's objects stored on PiCloud'''
+    iterlist = cloud.bucket.iterlist()
+    first = iterlist.next
+    assert first is not None
 
 @raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+def test_exception1():
+    '''Raise TypeError since bucket.iterlist called with 5 arguments'''
+    cloud.bucket.iterlist('asdf','asdg','asdg','asgd','asdg')
