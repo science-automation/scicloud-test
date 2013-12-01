@@ -14,23 +14,10 @@ def setup_function():
 def teardown_function():
     pass
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+def test_close():
+    assert cloud.close() == False
 
 @raises(TypeError)
-def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+def test_exception1():
+    '''Raise TypeError since cloud.close called with argument'''
+    cloud.close('asdf')
