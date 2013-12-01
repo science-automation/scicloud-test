@@ -7,21 +7,23 @@ import cloud
 from cloud import CloudException, CloudTimeoutError
 from nose import with_setup
 from nose.tools import *
+import random
 
 def setup_function():
-#    cloud.environment.create('testenv','precise')
     pass
 
 def teardown_function():
-    # unable to delete environments through api
     pass
 
 @with_setup(setup_function, teardown_function)
-def test_environment_list():
-    list = cloud.environment.list_envs()
-    assert len(list) > 0
-
-@raises(TypeError)
-def test_exception1():
-    '''Raise TypeError since cloud.environment.list_envs called with 2 arguments'''
-    cloud.environment.list_envs('asdfd','asdfds')
+def test_environment_edit_info():
+    '''Create environment and edit it's info'''
+    name = "testenv" + str(random.randint(1,1000000))
+    hostname = cloud.environment.create(name,'precise')
+    cloud.environment.save_shutdown(name)
+    newname = "testenv" + str(random.randint(1,1000000))
+    cloud.environment.edit_info(name, new_name=newname, new_desc="Updated the information")
+    newenv = cloud.environment.list_envs(name=newname)
+    newenvdict = newenv[0]
+    print newenvdict
+    assert newenvdict['name'] == newname
