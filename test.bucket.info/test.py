@@ -9,28 +9,41 @@ from nose import with_setup
 from nose.tools import *
 
 def setup_function():
-    pass
- 
-def teardown_function():
-    pass
+    cloud.bucket.put('test1.txt')
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+def teardown_function():
+    cloud.bucket.remove('test1.txt')
+
+@with_setup(setup_function, teardown_function)
+def test_info_content_type():
+    '''Get content_type on existing file'''
+    info = cloud.bucket.info('test1.txt')
+    assert info['content-type'] == "text/plain"
+
+@with_setup(setup_function, teardown_function)
+def test_info_cache_control():
+    '''Get content_type on existing file'''
+    info = cloud.bucket.info('test1.txt')
+    assert info['cache-control'] == None
+
+@with_setup(setup_function, teardown_function)
+def test_info_content_disposition():
+    '''Get content_disposition on existing file'''
+    info = cloud.bucket.info('test1.txt')
+    assert info['content-disposition'] == None
+
+@with_setup(setup_function, teardown_function)
+def test_info_md5():
+    '''Get md5sum on existing file'''
+    info = cloud.bucket.info('test1.txt')
+    assert info['md5sum'] == '08c1f0b56a2f061a370ad61d01a839c9'
+
+@raises(CloudException)
+def test_get_no_exist():
+    '''Raise CloudException since file should not exist'''
+    assert cloud.bucket.info('doesnotexist.txt') == False
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+    '''Raise TypeError since bucket.info called without arguments'''
+    cloud.bucket.info()

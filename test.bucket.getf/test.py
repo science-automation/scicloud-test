@@ -9,28 +9,23 @@ from nose import with_setup
 from nose.tools import *
 
 def setup_function():
-    pass
- 
+    cloud.bucket.put('test1.txt')
+
 def teardown_function():
-    pass
+    cloud.bucket.remove('test1.txt')
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+@with_setup(setup_function, teardown_function)
+def test_getf():
+    '''Create CloudBucketObject for the file.  Tell will confirm file is at position 0'''
+    bucketobj = cloud.bucket.getf('test1.txt') 
+    assert bucketobj.tell() == 0
 
 @raises(TypeError)
+def test_exception1():
+    '''Raise CloudException since bucket.getf called without arguments'''
+    cloud.bucket.getf()
+
+@raises(CloudException)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+    '''Raise CloudException since bucket.getf called without arguments'''
+    cloud.bucket.getf('doesnotexist.txt')
