@@ -8,29 +8,24 @@ from cloud import CloudException, CloudTimeoutError
 from nose import with_setup
 from nose.tools import *
 
+
 def setup_function():
     pass
  
 def teardown_function():
     pass
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+@with_setup(setup_function, teardown_function)
+def test_rest_publish():
+    url = cloud.shell.rest_publish("ls -al", "lsfunc", return_file='return.txt')
+    assert url is not None
+
+@raises(TypeError)
+def test_exception1():
+    '''Raise TypeError since cloud.shell.rest_publish called without arguments'''
+    cloud.shell.rest_publish()
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+    '''Raise TypeError since cloud.shell.rest_publish called with one argument'''
+    cloud.shell.rest_publish('asdfasdf')

@@ -8,29 +8,23 @@ from cloud import CloudException, CloudTimeoutError
 from nose import with_setup
 from nose.tools import *
 
+
 def setup_function():
     pass
  
 def teardown_function():
     pass
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+#@with_setup(setup_function, teardown_function)
+#def test_register():
+#    cloud.shell.execute_map(lambda: 3*3,return_file='return.txt')
+
+@raises(TypeError)
+def test_exception1():
+    '''Raise TypeError since cloud.shell.execute_map called without arguments'''
+    cloud.shell.execute_map()
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+    '''Raise TypeError since cloud.shell.execute_map called with invalid function'''
+    cloud.shell.execute_map('asdfasdf')
