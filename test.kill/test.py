@@ -14,23 +14,20 @@ def setup_function():
 def teardown_function():
     pass
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+def infinite_loop():
+    while True:
+       pass
+
+def test_kill():
+    '''Kill specified job'''
+    jid = cloud.call(infinite_loop)        #start a job which will never end
+    assert cloud.kill(jid) == None         #at least until you kill it
+
+def test_kill_all():
+    '''Kill all running jobs when calling without argument'''
+    assert cloud.kill() == None
 
 @raises(TypeError)
-def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+def test_exception1():
+    '''Raise TypeError since cloud.call called with string argument'''
+    cloud.kill("asdf")
