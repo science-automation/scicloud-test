@@ -18,10 +18,11 @@ def teardown_function():
 
 @with_setup(setup_function, teardown_function)
 def test_environment_list():
-    list = cloud.environment.list_envs()
+    '''List the environment bases'''
+    list = cloud.environment.list_bases()
     assert len(list) > 0
 
 @raises(TypeError)
 def test_exception1():
-    '''Raise TypeError since cloud.environment.list_envs called with 2 arguments'''
-    cloud.environment.list_envs('asdfd','asdfds')
+    '''Raise TypeError since cloud.environment.list_envs called with 1 argument'''
+    cloud.environment.list_bases('asdfd')
