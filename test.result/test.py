@@ -20,17 +20,17 @@ def test_multiply():
     assert answer == 9
 
 @raises(TypeError)
+def test_exception1():
+    '''Raise TypeError since cloud.result called without arguments'''
+    cloud.result()
+
+@raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
+    '''Raise TypeError since cloud.result called with string argument'''
+    cloud.result("asdf")
 
-@raises(TypeError)
+@raises(CloudException)
 def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
+    '''Raise TypeError since cloud.result called with invalid job number'''
+    cloud.result(1000000)
 
