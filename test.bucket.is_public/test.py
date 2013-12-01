@@ -9,28 +9,30 @@ from nose import with_setup
 from nose.tools import *
 
 def setup_function():
-    pass
- 
-def teardown_function():
-    pass
+    cloud.bucket.put('test1.txt')
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+def teardown_function():
+    cloud.bucket.remove('test1.txt')
+
+@with_setup(setup_function, teardown_function)
+def test_is_public():
+    '''File should exist and not be public'''
+    assert cloud.bucket.is_public('test1.txt') == False
+
+@with_setup(setup_function, teardown_function)
+def test_is_public2():
+    '''File should exist and be public'''
+    cloud.bucket.make_public('test1.txt')
+    info = cloud.bucket.info('test1.txt')
+    print info
+    assert cloud.bucket.is_public('test1.txt') == info['url']
+
+@raises(CloudException)
+def test_get_no_exist():
+    '''Raise CloudException since file should not exist'''
+    assert cloud.bucket.is_public('doesnotexist.txt') == False
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
-
-@raises(TypeError)
-def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+    '''Raise TypeError since bucket.is_public called without arguments'''
+    cloud.bucket.is_public()
