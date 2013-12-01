@@ -8,29 +8,39 @@ from cloud import CloudException, CloudTimeoutError
 from nose import with_setup
 from nose.tools import *
 
+
 def setup_function():
     pass
  
 def teardown_function():
-    pass
+    cloud.cron.deregister("mycron")
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+@with_setup(setup_function, teardown_function)
+def test_register():
+    cloud.cron.register(lambda: 3*3, 'mycron', '5 0 * * *')
+
+@raises(ValueError)
+def test_register_invalid_cron():
+    cloud.cron.register(lambda: 3*3, 'mycron', '5 0 * * * *')
+
+@raises(TypeError)
+def test_exception1():
+    '''Raise TypeError since cloud.register called without arguments'''
+    cloud.cron.register()
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
+    '''Raise TypeError since cloud.register called with 1 arguments'''
+    cloud.cron.register('asdfasdf')
 
 @raises(TypeError)
 def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
+    '''Raise TypeError since cloud.register called with 2 arguments'''
+    cloud.cron.register('asdfasdf','asdfdsf')
 
 @raises(TypeError)
 def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
+    '''Raise TypeError since cloud.register called with 4 arguments'''
+    cloud.cron.register('asdfasdf','asdfdsf','asdfads','asdfds')
+
 

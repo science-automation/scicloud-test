@@ -20,12 +20,12 @@ def test_deregister():
     cloud.cron.deregister("mycron")
 
 @raises(TypeError)
-def test_exception2():
+def test_exception1():
     '''Raise TypeError since cloud.deregister called without arguments'''
     cloud.cron.deregister()
 
 @raises(TypeError)
-def test_exception3():
+def test_exception2():
     '''Raise TypeError since cloud.deregister called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
+    cloud.cron.deregister("asdf","sadf")
 
