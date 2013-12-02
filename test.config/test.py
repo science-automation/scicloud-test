@@ -104,9 +104,6 @@ def test_config_use_simulator():
     config = ConfigSettings(cc.config)  #sets cc.config values
     config.use_simulator == False
 
-
-
-
 @raises(TypeError)
 def test_exception1():
     '''Raise TypeError since cloud.config.commit called with an argument'''
