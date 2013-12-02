@@ -14,23 +14,26 @@ def setup_function():
 def teardown_function():
     pass
 
-def test_multiply():
+def test_delete():
     jid = cloud.call(lambda: 3*3)
-    answer = cloud.result(jid)
-    assert answer == 9
+    cloud.result(jid)
+    result = cloud.delete(jid)
+    assert result is None
+
+@raises(CloudException)
+def test_exception1():
+    '''Raise CloudException since cloud.delete called and then cloud.result after job info has been deleted'''
+    jid = cloud.call(lambda: 3*3)
+    cloud.result(jid)
+    result = cloud.delete(jid)
+    fail = cloud.result(jid)
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
+    '''Raise TypeError since cloud.delete called without arguments'''
+    cloud.delete()
 
 @raises(TypeError)
 def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
-
-@raises(TypeError)
-def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
-
+    '''Raise TypeError since cloud.delete called with 1 invalid argument'''
+    cloud.delete("asdf")
