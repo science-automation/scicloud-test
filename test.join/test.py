@@ -16,21 +16,22 @@ def teardown_function():
 
 def test_multiply():
     jid = cloud.call(lambda: 3*3)
+    cloud.join(jid)
     answer = cloud.result(jid)
     assert answer == 9
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
+    '''Raise TypeError since cloud.join called without arguments'''
+    cloud.join()
 
 @raises(TypeError)
 def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
+    '''Raise TypeError since cloud.join called with 1 invalid argument'''
+    cloud.join("asdf")
 
 @raises(TypeError)
 def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
+    '''Raise TypeError since cloud.join called with not existing job'''
+    jid = cloud.call(100000)
 
