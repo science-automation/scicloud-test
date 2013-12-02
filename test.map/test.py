@@ -14,23 +14,29 @@ def setup_function():
 def teardown_function():
     pass
 
-def test_multiply():
-    jid = cloud.call(lambda: 3*3)
+def test_map():
+    jid = cloud.map(lambda: x*y, 3, 3)
     answer = cloud.result(jid)
     assert answer == 9
 
 @raises(TypeError)
 def test_exception2():
-    '''Raise TypeError since cloud.call called without arguments'''
-    jid = cloud.call()
+    '''Raise TypeError since cloud.map called without arguments'''
+    jid = cloud.map()
 
 @raises(TypeError)
 def test_exception3():
-    '''Raise TypeError since cloud.call called with 1 invalid argument'''
-    jid = cloud.call("asdf")
+    '''Raise TypeError since cloud.map called with 1 invalid argument'''
+    jid = cloud.map("asdf")
 
 @raises(TypeError)
 def test_exception4():
-    '''Raise TypeError since cloud.call called with 2 invalid arguments'''
-    jid = cloud.call("asdf","sadf")
+    '''Raise TypeError since cloud.map called with 2 invalid arguments'''
+    jid = cloud.map("asdf","sadf")
+
+@raises(TypeError)
+def test_exception4():
+    '''Raise TypeError since second argument is not iterable'''
+    jid = cloud.map(lambda: 3*3, 3)
+
 
