@@ -1,3 +1,3 @@
 cloud
 PIL
-nose=1.3.0
+nose==1.3.0
