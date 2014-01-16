@@ -24,12 +24,12 @@ def test_environment_create():
     assert hostname is not None 
 
 @raises(TypeError)
-def test_exception1():
+def test_exception_one_argumment():
     '''Raise TypeError since cloud.environment.create called with 1 arguments'''
     cloud.environment.create('asdfd')
 
 @raises(CloudException)
-def test_exception2():
+def test_exception_invalid_base_environment():
     '''Raise TypeError since cloud.environment.create called with invalid base environment'''
     cloud.environment.create('asdfd','precise2')
 

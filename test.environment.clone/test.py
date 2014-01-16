@@ -16,7 +16,7 @@ def teardown_function():
     pass
 
 @with_setup(setup_function, teardown_function)
-def test_environment_save_shutdown():
+def test_environment_clone():
     '''Create environment with random name and clone it'''
     name = "testenv" + str(random.randint(1,1000000))
     clonename = "testenv" + str(random.randint(1,1000000))
@@ -27,13 +27,18 @@ def test_environment_save_shutdown():
     cloneenv = list[0]
     assert cloneenv['name'] == clonename
 
+@raises(CloudException)
+def test_exception_invalid_name():
+    '''Raise CloudException since cloud.environment.clone called with name that does not exist'''
+    cloud.environment.clone("foobar","foobar2", new_desc="This will not work")
+
 @raises(TypeError)
-def test_exception1():
+def test_exception_zero_arguments():
     '''Raise TypeError since cloud.environment.clone called with 0 arguments'''
     cloud.environment.clone()
 
 @raises(TypeError)
-def test_exception2():
+def test_exception_too_many_arguments():
     '''Raise TypeError since cloud.environment.clone called with 4 arguments'''
     cloud.environment.save_shutdown('asdfd','asdg','asdf','asdf')
 
